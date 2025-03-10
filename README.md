@@ -13,8 +13,8 @@ A simple and modern forget password form allows users to request a new password 
 ### 📸 Screenshot  
 <div align="left">
   <img height="500" src="https://i.postimg.cc/QMFyPr2s/1.png"  />
-  <img height="500" src="https://files.fm/f/hesmwgfr9g"  />
-  <img height="500" src="https://files.fm/f/7bx3s92wez"  />
+  <img height="500" src="https://i.postimg.cc/0yW4cNHc/2.png"  />
+  <img height="500" src="https://i.postimg.cc/6p5SrZz8/3.png"  />
 </div>
 
 ### 🚀 How to Use  
