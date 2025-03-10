@@ -1,4 +1,4 @@
-# Welcome to the **Advanced | Pro Level** 🚀  
+**Advanced | Pro Level** 🚀  
 
 
 ### 📌 Day 2 - Forget Password Form and Confirmation Code Form 👋
@@ -12,7 +12,7 @@ A simple and modern forget password form allows users to request a new password 
 
 ### 📸 Screenshot  
 <div align="left">
-  <img height="500" src="https://files.fm/f/24ahcj8q3p"  />
+  <img height="500" src="https://i.postimg.cc/QMFyPr2s/1.png"  />
   <img height="500" src="https://files.fm/f/hesmwgfr9g"  />
   <img height="500" src="https://files.fm/f/7bx3s92wez"  />
 </div>
