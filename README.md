@@ -1,50 +1,40 @@
-# Welcome to your Expo app 👋
+# Welcome to the **Daily UI Challenge!** 🚀  
+Each day, we create a new mobile app screen to enhance the UI/UX and mobile development skills.  
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+### 📌 Day 2 - Forget Password Form and Confirmation Code Form 👋
+A simple and modern forget password form allows users to request a new password if they can't access their old one. This involves two screens: (i) forget password Screen (ii) confirmation code screen
 
-## Get started
+### 🎨 Features:
+- Minimalist and user-friendly design  
+- Input field 
 
-1. Install dependencies
+### 🛠️ Technologies Used:
+- Expo - React Native & Flutter
+- Styled Components
+  **PRO LEVELS - [See the advanced branch on the branch tab here on github]**
+- Form Validation (e.g., Yup & Formik)  
 
+### 📸 Screenshot  
+<div align="center">
+  <img height="400" src="https://imagedelivery.net/_QLyhNQIk5K6p8kNrFQcIA/6453a44e-4cc7-4bd4-3b64-a95eab039100/public"  />
+  <img height="400" src="https://imagedelivery.net/_QLyhNQIk5K6p8kNrFQcIA/1e675f68-92b0-4661-1d96-9aacf0d44000/public"  />
+</div>
+
+### 🚀 How to Use  
+1. Clone the repository:  
    ```bash
-   npm install
+   git clone https://github.com/iamjhay/sign_in_form.git
+   ```
+2. Navigate to the project directory and install dependencies:  
+   ```bash
+   cd sign-in-form && npm install
+   ```
+3. Run the project on your mobile emulator or device:  
+   ```bash
+   npm start
    ```
 
-2. Start the app
+### 💡 Why This Challenge?  
+Practicing UI/UX design daily helps improve creativity, problem-solving skills, and mastery of design principles.
 
-   ```bash
-    npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+---
