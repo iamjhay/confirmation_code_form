@@ -1,4 +1,4 @@
-# Welcome to the **Daily UI Challenge - Day 2 ** 🚀  
+# Welcome to the **Daily UI Challenge - Day 2** 🚀  
 Each day, we create a new mobile app screen to enhance the UI/UX and mobile development skills.  
 
 ### 📌 Day 2 - Forget Password Form and Confirmation Code Form 👋
