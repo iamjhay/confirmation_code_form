@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   SafeAreaView,
@@ -6,25 +6,86 @@ import {
   Text,
   TouchableOpacity,
   TextInput,
+  Alert,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { Link, useRouter } from "expo-router";
-import { BUTTON_COLOR, INPUT_OFFSET } from "@/constants/utils";
+import {
+  BUTTON_COLOR,
+  EMAIL_STORAGE_KEY,
+  INPUT_ERROR_COLOR,
+  INPUT_OFFSET,
+} from "@/constants/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Example() {
   const router = useRouter();
   const [form, setForm] = useState({
     email: "",
   });
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Load email from storage when component mounts
+  useEffect(() => {
+    const loadEmail = async () => {
+      try {
+        const savedEmail = await AsyncStorage.getItem(EMAIL_STORAGE_KEY);
+        if (savedEmail) {
+          setForm({ email: savedEmail });
+        }
+      } catch (error) {
+        console.log("Error loading email:", error);
+      }
+    };
+
+    loadEmail();
+  }, []);
+
+  // Email validation function
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   // Handle form submission
   const handleSubmit = async () => {
+    // Reset error state
+    setError("");
+
+    // Validate email
+    if (!form.email.trim()) {
+      setError("Email address is required");
+      return;
+    }
+
+    if (!validateEmail(form.email)) {
+      setError("Please enter a valid email address");
+      return;
+    }
+
+    // Set loading state
+    setIsLoading(true);
+
     try {
-      router.push("/confirm-code");
+      // Store email in AsyncStorage
+      await AsyncStorage.setItem(EMAIL_STORAGE_KEY, form.email);
+
+      // Navigate to confirmation screen
+      router.push({
+        pathname: "/confirm-code",
+        params: {
+          email: form.email,
+        },
+      });
     } catch (error) {
       console.log("Error saving email:", error);
+      Alert.alert("Error", "Failed to process your request. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ebf3fa" }}>
       <View style={styles.container}>
@@ -49,44 +110,28 @@ export default function Example() {
             <TextInput
               clearButtonMode="while-editing"
               keyboardType="email-address"
-              onChangeText={(email) => setForm({ ...form, email })}
+              autoCapitalize="none"
+              onChangeText={(email) => {
+                setForm({ ...form, email });
+                setError(""); // Clear error when user types
+              }}
               placeholder="john@example.com"
-              placeholderTextColor="#9b9b9c"
+              placeholderTextColor="#b4b4b4"
               returnKeyType="done"
-              style={styles.inputControl}
+              style={[styles.inputControl, error ? styles.inputError : null]}
               value={form.email}
             />
+            {error ? <Text style={styles.errorText}>{error}</Text> : null}
           </View>
 
           <View style={styles.formAction}>
-            <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-                handleSubmit();
-              }}
-            >
-              <View style={styles.btn}>
-                <Text style={styles.btnText}>Next</Text>
+            <TouchableOpacity onPress={handleSubmit} disabled={isLoading}>
+              <View style={[styles.btn, isLoading ? styles.btnDisabled : null]}>
+                <Text style={styles.btnText}>
+                  {isLoading ? "Processing..." : "Next"}
+                </Text>
               </View>
             </TouchableOpacity>
-            {/* <TouchableOpacity
-              onPress={() => {
-                // handle onPress
-              }}
-            >
-              <View style={styles.btnSecondary}>
-                <MaterialCommunityIcons
-                  color="#000"
-                  name="facebook"
-                  size={22}
-                  style={{ marginRight: 12 }}
-                />
-
-                <Text style={styles.btnSecondaryText}>Facebook</Text>
-
-                <View style={{ width: 34 }} />
-              </View>
-            </TouchableOpacity> */}
           </View>
 
           <TouchableOpacity
@@ -179,6 +224,14 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     borderStyle: "solid",
   },
+  inputError: {
+    borderColor: INPUT_ERROR_COLOR,
+  },
+  errorText: {
+    color: INPUT_ERROR_COLOR,
+    fontSize: 14,
+    marginTop: 5,
+  },
   /** Button */
   btn: {
     flexDirection: "row",
@@ -212,5 +265,8 @@ const styles = StyleSheet.create({
     lineHeight: 26,
     fontWeight: "600",
     color: "#000",
+  },
+  btnDisabled: {
+    backgroundColor: "#a9a9a9",
   },
 });

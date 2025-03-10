@@ -6,16 +6,93 @@ import {
   Text,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
-import { useRouter } from "expo-router";
-import { INPUT_OFFSET, BUTTON_COLOR } from "@/constants/utils";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import {
+  INPUT_OFFSET,
+  BUTTON_COLOR,
+  EMAIL_STORAGE_KEY,
+} from "@/constants/utils";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function ConfirmPasswordScreen() {
   const router = useRouter();
+  const { email } = useLocalSearchParams();
   const [formData, setFormData] = useState({
     code: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const validateCode = (code: string) => {
+    // Clear previous errors
+    setError("");
+
+    // Check if code is exactly 6 digits
+    if (!/^\d{6}$/.test(code)) {
+      setError("Please enter a 6-digit numeric code");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleCodeChange = (code: string) => {
+    // Only allow numeric input and max 6 characters
+    const numericCode = code.replace(/[^0-9]/g, "").slice(0, 6);
+    setFormData({ ...formData, code: numericCode });
+
+    // Clear error if user is typing
+    if (error) setError("");
+  };
+
+  const handleSubmit = async () => {
+    if (!validateCode(formData.code)) {
+      return;
+    }
+
+    try {
+      // Start loading
+      setIsLoading(true);
+
+      // Simulate API verification delay (3 seconds)
+      await new Promise((resolve) => setTimeout(resolve, 3000));
+
+      // Remove email from storage
+      await AsyncStorage.removeItem(EMAIL_STORAGE_KEY);
+
+      setIsLoading(false);
+
+      // Show success alert
+      Alert.alert(
+        "Verification Complete",
+        "Your code has been verified successfully.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.replace("/"), // Navigate back to forgot password screen
+          },
+        ]
+      );
+    } catch (error) {
+      setIsLoading(false);
+      Alert.alert(
+        "Error",
+        "An error occurred during verification. Please try again."
+      );
+    }
+  };
+
+  const resendCode = () => {
+    // In a real app, you would call an API to resend the code
+    Alert.alert(
+      "Code Resent",
+      `A new verification code has been sent to ${email}`
+    );
+  };
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: "#ebf3fa" }}>
@@ -33,8 +110,8 @@ export default function ConfirmPasswordScreen() {
           <Text style={styles.title}>Enter the Confirmation Code</Text>
 
           <Text style={styles.subtitle}>
-            To confirm your password, enter the 6-digit code we sent to
-            john@example.com
+            To confirm your password, enter the 6-digit code we sent to{" "}
+            <Text style={styles.emailText}>{email}</Text>
           </Text>
         </View>
 
@@ -44,27 +121,38 @@ export default function ConfirmPasswordScreen() {
           <TextInput
             clearButtonMode="while-editing"
             keyboardType="numeric"
-            onChangeText={(code) => setFormData({ ...formData, code })}
+            onChangeText={handleCodeChange}
             placeholder="******"
             placeholderTextColor="#9b9b9c"
             returnKeyType="done"
-            style={styles.inputControl}
+            style={[styles.inputControl, error ? styles.inputError : null]}
             value={formData.code}
+            maxLength={6}
           />
+
+          {error ? <Text style={styles.errorText}>{error}</Text> : null}
+
+          <Text style={styles.codeHint}>
+            {formData.code.length}/6 digits entered
+          </Text>
         </View>
 
         <View style={styles.actions}>
-          <TouchableOpacity onPress={() => router.push("/")}>
+          <TouchableOpacity
+            onPress={handleSubmit}
+            disabled={isLoading}
+            style={{ opacity: isLoading ? 0.7 : 1 }}
+          >
             <View style={styles.btn}>
-              <Text style={styles.btnText}>Next</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#ffffff" size="small" />
+              ) : (
+                <Text style={styles.btnText}>Next</Text>
+              )}
             </View>
           </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              // In a real app, you would resend the email here
-              alert("Password reset email resent to");
-            }}
-          >
+
+          <TouchableOpacity onPress={resendCode} disabled={isLoading}>
             <View style={styles.btnSecondary}>
               <Text style={styles.btnSecondaryText}>I didn't get the code</Text>
             </View>
@@ -99,7 +187,7 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   emailText: {
-    fontSize: 18,
+    fontSize: 14,
     fontWeight: "600",
     color: "#0469ff",
     marginBottom: 24,
@@ -138,6 +226,20 @@ const styles = StyleSheet.create({
     borderColor: "#e0e0e0",
     borderStyle: "solid",
   },
+  inputError: {
+    borderColor: "#ff3b30",
+  },
+  errorText: {
+    color: "#ff3b30",
+    fontSize: 14,
+    marginTop: 5,
+  },
+  codeHint: {
+    color: "#929292",
+    fontSize: 12,
+    marginTop: 5,
+    textAlign: "right",
+  },
   /** Button */
   btn: {
     flexDirection: "row",
@@ -147,6 +249,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 20,
     backgroundColor: BUTTON_COLOR,
+    height: 46,
   },
   btnText: {
     fontSize: 18,
