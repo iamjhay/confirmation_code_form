@@ -23,11 +23,11 @@ A simple and modern forget password form allows users to request a new password 
 ### 🚀 How to Use  
 1. Clone the repository:  
    ```bash
-   git clone https://github.com/iamjhay/sign_in_form.git
+   git clone https://github.com/iamjhay/confirmation_code_form.git
    ```
 2. Navigate to the project directory and install dependencies:  
    ```bash
-   cd sign-in-form && npm install
+   cd confirmation_code_form && npm install
    ```
 3. Run the project on your mobile emulator or device:  
    ```bash
